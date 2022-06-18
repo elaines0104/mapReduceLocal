@@ -18,7 +18,7 @@ func main() {
 	var jobName string
 	numberOfMapOutput = 8
 	jobName = "teste"
-	var path string = "/path/to/mapReduceLocal"
+	var path string = "/path/to/mapReduceLocal/"
 
 	if os.Args[1] == "wordcount" {
 		wordCount.WordCount(os.Args[2], jobName, numberOfMapOutput, path, nil)
