@@ -84,8 +84,8 @@ func doMapDistributedLoop(jobName string, mapTaskNumber int, nReduce int, kvList
 
 }
 func DoReduceDistributed(
-	jobName string, // the name of the whole MapReduce job
-	numberOfMapOutput int, // which reduce task this is
+	jobName string,
+	numberOfMapOutput int,
 	numberOfFiles int,
 	reduceF func(key string, values []string) string,
 	path string) {

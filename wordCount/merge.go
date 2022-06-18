@@ -12,7 +12,7 @@ import (
 )
 
 func merge(numberOfMapOutput int, jobName string) {
-	//fmt.Println("Merge phase")
+	fmt.Println("Merge phase")
 	kvs := make(map[string]int)
 	for i := 0; i < numberOfMapOutput; i++ {
 		p := common.ReduceOutputName(jobName, i)
