@@ -1,4 +1,5 @@
 HOW TO USE
+
 Case: Inverted Index
 
       go run main.go ii sequential
