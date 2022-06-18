@@ -1,13 +1,16 @@
 HOW TO USE
 Case: Inverted Index
+
       go run main.go ii sequential
       go run main.go ii distributed
 
 Case: wordCount
+
       go run main.go wordcount sequential
       go run main.go wordcount distributed
       
 Case: netflixdata
+
       go run main.go netflix sequential type
       go run main.go netflix sequential director
       go run main.go netflix sequential cast
