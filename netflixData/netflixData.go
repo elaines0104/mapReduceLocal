@@ -2,13 +2,15 @@ package netflixdata
 
 import (
 	"fmt"
+	"io/ioutil"
 	"map-reduce/common"
 	shuffleSort "map-reduce/shuffleSort"
+	"strings"
 	"time"
 )
 
 func NetflixData(method string, jobName string, numberOfMapOutput int, path string, column *string) {
-	jobName = jobName + "-netflixData"
+	jobName = jobName + "-netflixData-" + *column
 
 	files := common.OpenFiles(column)
 	if method == "sequential" {
@@ -16,8 +18,11 @@ func NetflixData(method string, jobName string, numberOfMapOutput int, path stri
 	} else if method == "distributed" {
 		wordCountDistributed(jobName, files, numberOfMapOutput, path, column)
 	}
-	merge(numberOfMapOutput, jobName)
+	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)
+	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)
+	netflixDataTest(jobName)
 }
+
 func wordCountSequential(jobName string, files []string, numberOfMapOutput int, path string, column *string) {
 	start := time.Now()
 	for i, file := range files {
@@ -51,4 +56,25 @@ func wordCountDistributed(jobName string, files []string, numberOfMapOutput int,
 
 	fmt.Println("Reduce phase took:", elapsed)
 
+}
+func netflixDataTest(jobName string) {
+	resultName := strings.Split(jobName, "-")
+	resultName = resultName[1:]
+
+	resultFileName := "result-" + strings.Join(resultName, "-") + ".txt"
+
+	resultFile, err := ioutil.ReadFile(resultFileName)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	jobFile, err := ioutil.ReadFile(common.ResultName(jobName))
+	if err != nil {
+		fmt.Println(err)
+	}
+	if string(resultFile) == string(jobFile) {
+		fmt.Println("it worked")
+	} else {
+		fmt.Println("It did not work")
+	}
 }

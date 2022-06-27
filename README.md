@@ -5,12 +5,12 @@ Case: Inverted Index
       go run main.go ii sequential
       go run main.go ii distributed
 
-Case: wordCount
+Case: Word Count
 
       go run main.go wordcount sequential
       go run main.go wordcount distributed
       
-Case: netflixdata
+Case: Netflix data
 
       go run main.go netflix sequential type
       go run main.go netflix sequential director
@@ -19,6 +19,7 @@ Case: netflixdata
       go run main.go netflix sequential release_year
       go run main.go netflix sequential duration
       go run main.go netflix sequential listed_in
+      
       go run main.go netflix distributed type
       go run main.go netflix distributed director
       go run main.go netflix distributed cast

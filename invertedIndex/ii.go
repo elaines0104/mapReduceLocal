@@ -2,8 +2,11 @@ package invertedIndex
 
 import (
 	"fmt"
+	"io/ioutil"
 	"map-reduce/common"
 	"map-reduce/shuffleSort"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -16,7 +19,8 @@ func Ii(method string, jobName string, numberOfMapOutput int, path string, colum
 	} else if method == "distributed" {
 		iiDistributed(jobName, files, numberOfMapOutput, path)
 	}
-	merge(numberOfMapOutput, jobName)
+	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)
+	iiTest(jobName, len(files))
 
 }
 func iiSequential(jobName string, files []string, numberOfMapOutput int, path string) {
@@ -53,4 +57,26 @@ func iiDistributed(jobName string, files []string, numberOfMapOutput int, path s
 
 	fmt.Println("Reduce phase took:", elapsed)
 
+}
+
+func iiTest(jobName string, numberOfFiles int) {
+	resultName := strings.Split(jobName, "-")
+	resultName = resultName[1:]
+
+	resultFileName := "result-" + strconv.Itoa(numberOfFiles) + "files-" + strings.Join(resultName, "-") + ".txt"
+
+	resultFile, err := ioutil.ReadFile(resultFileName)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	jobFile, err := ioutil.ReadFile(common.ResultName(jobName))
+	if err != nil {
+		fmt.Println(err)
+	}
+	if string(resultFile) == string(jobFile) {
+		fmt.Println("it worked")
+	} else {
+		fmt.Println("It did not work")
+	}
 }

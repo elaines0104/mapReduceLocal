@@ -2,8 +2,11 @@ package wordCount
 
 import (
 	"fmt"
+	"io/ioutil"
 	"map-reduce/common"
 	shuffleSort "map-reduce/shuffleSort"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -16,7 +19,11 @@ func WordCount(method string, jobName string, numberOfMapOutput int, path string
 	} else if method == "distributed" {
 		wordCountDistributed(jobName, files, numberOfMapOutput, path)
 	}
-	merge(numberOfMapOutput, jobName)
+	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)
+
+	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)
+	wordCountTest(jobName, len(files))
+
 }
 func wordCountSequential(jobName string, files []string, numberOfMapOutput int, path string) {
 	start := time.Now()
@@ -50,4 +57,26 @@ func wordCountDistributed(jobName string, files []string, numberOfMapOutput int,
 
 	fmt.Println("Reduce phase took:", elapsed)
 
+}
+
+func wordCountTest(jobName string, numberOfFiles int) {
+	resultName := strings.Split(jobName, "-")
+	resultName = resultName[1:]
+
+	resultFileName := "result-" + strconv.Itoa(numberOfFiles) + "files-" + strings.Join(resultName, "-") + ".txt"
+
+	resultFile, err := ioutil.ReadFile(resultFileName)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	jobFile, err := ioutil.ReadFile(common.ResultName(jobName))
+	if err != nil {
+		fmt.Println(err)
+	}
+	if string(resultFile) == string(jobFile) {
+		fmt.Println("it worked")
+	} else {
+		fmt.Println("It did not work")
+	}
 }
