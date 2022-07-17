@@ -10,13 +10,13 @@ import (
 	"time"
 )
 
-func Ii(method string, jobName string, numberOfMapOutput int, path string, column []string) {
+func Ii(useCase string, jobName string, numberOfMapOutput int, path string, column []string) {
 	jobName = jobName + "-invertedIndex"
 
 	files := common.OpenFiles(nil)
-	if method == "sequential" {
+	if useCase == "sequential" {
 		iiSequential(jobName, files, numberOfMapOutput, path)
-	} else if method == "distributed" {
+	} else if useCase == "distributed" {
 		iiDistributed(jobName, files, numberOfMapOutput, path)
 	}
 	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)

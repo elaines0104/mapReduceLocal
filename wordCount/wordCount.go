@@ -10,13 +10,13 @@ import (
 	"time"
 )
 
-func WordCount(method string, jobName string, numberOfMapOutput int, path string, column []string) {
+func WordCount(useCase string, jobName string, numberOfMapOutput int, path string, column []string) {
 	files := common.OpenFiles(nil)
 
 	jobName = jobName + "-WordCount"
-	if method == "sequential" {
+	if useCase == "sequential" {
 		wordCountSequential(jobName, files, numberOfMapOutput, path)
-	} else if method == "distributed" {
+	} else if useCase == "distributed" {
 		wordCountDistributed(jobName, files, numberOfMapOutput, path)
 	}
 	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)

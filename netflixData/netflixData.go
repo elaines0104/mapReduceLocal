@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func NetflixData(method string, jobName string, numberOfMapOutput int, path string, column *string) {
+func NetflixData(useCase string, jobName string, numberOfMapOutput int, path string, column *string) {
 	jobName = jobName + "-netflixData-" + *column
 
 	files := common.OpenFiles(column)
-	if method == "sequential" {
+	if useCase == "sequential" {
 		wordCountSequential(jobName, files, numberOfMapOutput, path, column)
-	} else if method == "distributed" {
+	} else if useCase == "distributed" {
 		wordCountDistributed(jobName, files, numberOfMapOutput, path, column)
 	}
 	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)
