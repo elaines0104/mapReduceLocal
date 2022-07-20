@@ -16,8 +16,8 @@ func Ii(useCase string, jobName string, numberOfMapOutput int, path string, colu
 	files := common.OpenFiles(nil)
 	if useCase == "sequential" {
 		iiSequential(jobName, files, numberOfMapOutput, path)
-	} else if useCase == "distributed" {
-		iiDistributed(jobName, files, numberOfMapOutput, path)
+	} else if useCase == "concurrent" {
+		iiConcurrent(jobName, files, numberOfMapOutput, path)
 	}
 	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)
 	iiTest(jobName, len(files))
@@ -42,16 +42,16 @@ func iiSequential(jobName string, files []string, numberOfMapOutput int, path st
 
 }
 
-func iiDistributed(jobName string, files []string, numberOfMapOutput int, path string) {
+func iiConcurrent(jobName string, files []string, numberOfMapOutput int, path string) {
 	start := time.Now()
-	shuffleSort.DoMapDistributed(jobName, files, numberOfMapOutput, invertedIndexMapF, path, nil)
+	shuffleSort.DoMapConcurrent(jobName, files, numberOfMapOutput, invertedIndexMapF, path, nil)
 
 	elapsed := time.Since(start)
 
 	fmt.Println("Map phase took:", elapsed)
 
 	start = time.Now()
-	shuffleSort.DoReduceDistributed(jobName, numberOfMapOutput, len(files), invertedIndexReduceF, path)
+	shuffleSort.DoReduceConcurrent(jobName, numberOfMapOutput, len(files), invertedIndexReduceF, path)
 
 	elapsed = time.Since(start)
 

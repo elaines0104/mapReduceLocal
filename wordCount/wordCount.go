@@ -16,8 +16,8 @@ func WordCount(useCase string, jobName string, numberOfMapOutput int, path strin
 	jobName = jobName + "-WordCount"
 	if useCase == "sequential" {
 		wordCountSequential(jobName, files, numberOfMapOutput, path)
-	} else if useCase == "distributed" {
-		wordCountDistributed(jobName, files, numberOfMapOutput, path)
+	} else if useCase == "concurrent" {
+		wordCountConcurrent(jobName, files, numberOfMapOutput, path)
 	}
 	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)
 
@@ -44,15 +44,15 @@ func wordCountSequential(jobName string, files []string, numberOfMapOutput int, 
 
 }
 
-func wordCountDistributed(jobName string, files []string, numberOfMapOutput int, path string) {
+func wordCountConcurrent(jobName string, files []string, numberOfMapOutput int, path string) {
 	start := time.Now()
-	shuffleSort.DoMapDistributed(jobName, files, numberOfMapOutput, wordCountMapF, path, nil)
+	shuffleSort.DoMapConcurrent(jobName, files, numberOfMapOutput, wordCountMapF, path, nil)
 	elapsed := time.Since(start)
 
 	fmt.Println("Map phase took:", elapsed)
 
 	start = time.Now()
-	shuffleSort.DoReduceDistributed(jobName, numberOfMapOutput, len(files), wordCountReduceF, path)
+	shuffleSort.DoReduceConcurrent(jobName, numberOfMapOutput, len(files), wordCountReduceF, path)
 	elapsed = time.Since(start)
 
 	fmt.Println("Reduce phase took:", elapsed)

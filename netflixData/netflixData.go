@@ -15,8 +15,8 @@ func NetflixData(useCase string, jobName string, numberOfMapOutput int, path str
 	files := common.OpenFiles(column)
 	if useCase == "sequential" {
 		netflixDataSequential(jobName, files, numberOfMapOutput, path, column)
-	} else if useCase == "distributed" {
-		netflixDataDistributed(jobName, files, numberOfMapOutput, path, column)
+	} else if useCase == "concurrent" {
+		netflixDataConcurrent(jobName, files, numberOfMapOutput, path, column)
 	}
 	//common.Merge0rderByOccurrence(numberOfMapOutput, jobName)
 	common.MergeAlphabeticalOrder(numberOfMapOutput, jobName)
@@ -42,15 +42,15 @@ func netflixDataSequential(jobName string, files []string, numberOfMapOutput int
 
 }
 
-func netflixDataDistributed(jobName string, files []string, numberOfMapOutput int, path string, column *string) {
+func netflixDataConcurrent(jobName string, files []string, numberOfMapOutput int, path string, column *string) {
 	start := time.Now()
-	shuffleSort.DoMapDistributed(jobName, files, numberOfMapOutput, netflixDataMapF, path, column)
+	shuffleSort.DoMapConcurrent(jobName, files, numberOfMapOutput, netflixDataMapF, path, column)
 	elapsed := time.Since(start)
 
 	fmt.Println("Map phase took:", elapsed)
 
 	start = time.Now()
-	shuffleSort.DoReduceDistributed(jobName, numberOfMapOutput, len(files), netflixDataReduceF, path)
+	shuffleSort.DoReduceConcurrent(jobName, numberOfMapOutput, len(files), netflixDataReduceF, path)
 
 	elapsed = time.Since(start)
 

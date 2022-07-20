@@ -14,7 +14,7 @@ func ihash(s string) uint32 {
 	h.Write([]byte(s))
 	return h.Sum32()
 }
-func DoMapDistributed(jobName string,
+func DoMapConcurrent(jobName string,
 	files []string,
 	numberOfMapOutput int,
 	mapF func(file string, contents string) []common.KeyValue,
@@ -27,7 +27,7 @@ func DoMapDistributed(jobName string,
 		i := i
 		go func() {
 			defer wg.Done()
-			doMapDistributed(jobName, i, file, numberOfMapOutput, mapF, path, column)
+			doMapConcurrent(jobName, i, file, numberOfMapOutput, mapF, path, column)
 		}()
 
 	}
@@ -35,7 +35,7 @@ func DoMapDistributed(jobName string,
 
 }
 
-func doMapDistributed(
+func doMapConcurrent(
 	jobName string,
 	mapTaskNumber int,
 	inFile string,
@@ -55,14 +55,14 @@ func doMapDistributed(
 		r := r
 		go func() {
 			defer wg.Done()
-			doMapDistributedLoop(jobName, mapTaskNumber, numberOfMapOutput, kvList, r, path)
+			doMapConcurrentLoop(jobName, mapTaskNumber, numberOfMapOutput, kvList, r, path)
 		}()
 
 	}
 	wg.Wait()
 
 }
-func doMapDistributedLoop(jobName string, mapTaskNumber int, nReduce int, kvList []common.KeyValue, count int, path string) {
+func doMapConcurrentLoop(jobName string, mapTaskNumber int, nReduce int, kvList []common.KeyValue, count int, path string) {
 	reduceFileName := common.MapOutputName(jobName, mapTaskNumber, count)
 	fullPath := path + reduceFileName
 
@@ -83,7 +83,7 @@ func doMapDistributedLoop(jobName string, mapTaskNumber int, nReduce int, kvList
 	reduceFile.Close()
 
 }
-func DoReduceDistributed(
+func DoReduceConcurrent(
 	jobName string,
 	numberOfMapOutput int,
 	numberOfFiles int,
